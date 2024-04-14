@@ -2,24 +2,30 @@ grammar Expr;
 
 @header {
 	package antlr;
+	import backend.*;
 }
 
-prog: (decl | expr)+ EOF
-	;
+prog: statement+ ;
 
-decl: ID ':' INT_TYPE '=' NUM
-	;
+statement : expr SEMICOLON ;
 
-expr: expr '*' expr
-	| expr '+' expr
-	| ID
-	| NUM
-	;
-	
-	
+expr : INT
+     | STRING
+     | DOUBLE
+     | FLOAT
+     | BOOLEAN
+     | NULL
+     | expr PLUS expr
+     | ID
+     ;
 
-ID : [a-z][a-zA-Z0-9_]*;
-NUM : '0' | '-'?[1-9][0-9]*;
-INT_TYPE : 'INT';
-COMMENT : '--' ~[\r\n]* -> skip;
-WS : [ \t\n]+ -> skip;
+INT : 'int';
+STRING : 'string';
+DOUBLE : 'double';
+FLOAT : 'float';
+BOOLEAN : 'boolean';
+NULL : 'null';
+ID : [a-zA-Z]+ ;
+PLUS : '+';
+SEMICOLON : ';';
+WS : [ \t\r\n]+ -> skip ;
