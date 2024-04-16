@@ -1,0 +1,35 @@
+partial model LimitTestingParser
+  parameter Real a = 1;
+  parameter Real b = 2;
+  Real x;
+  Real y;
+  Real z;
+  Modelica.Blocks.Sources.Sine sine1(amplitude=1, frequency=2, phase=0, offset=0);
+  Modelica.Blocks.Sources.Sine sine2(amplitude=1, frequency=3, phase=0, offset=0);
+  Modelica.Blocks.Math.Add add1;
+  Modelica.Blocks.Math.Add add2;
+  Modelica.Blocks.Math.Gain gain1(k=2);
+  Modelica.Blocks.Math.Gain gain2(k=3);
+  Modelica.Blocks.Math.Gain gain3(k=4);
+  Modelica.Blocks.Nonlinear.FunctionFunctions.Sin sinBlock;
+  Modelica.Blocks.Nonlinear.FunctionFunctions.Cos cosBlock;
+  Modelica.Blocks.Tables.CombiTable1D table1(
+    table=[0, 1; 1, 2; 2, 3],
+    tableName="Test Table"
+  );
+  Modelica.Blocks.Tables.CombiTable1D table2(
+    table=[0, 1; 1, 2; 2, 3],
+    tableName="Test Table"
+  );
+equation
+  x = sinBlock.y;
+  y = cosBlock.y;
+  z = table1.y;
+  sine1.y -> add1.u1;
+  sine2.y -> add1.u2;
+  add1.y -> gain1.u;
+  gain1.y -> add2.u1;
+  gain2.y -> add2.u2;
+  add2.y -> gain3.u;
+  table2.y -> gain2.u;
+end LimitTestingParser;
